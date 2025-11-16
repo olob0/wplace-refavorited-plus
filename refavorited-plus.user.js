@@ -453,7 +453,7 @@
 
     const observerPixelMenu = new MutationObserver(() => {
       const selector = pixelMenuSelector.querySelector(
-        'div[class*="absolute"][class*="bottom-"] > div[class*="bg-base-"] div div:has(button[class*="btn-primary"])'
+        'div[class*="absolute"][class*="bottom-"] > div[class*="bg-base-"] div div[class*="hide-scrollbar"]:has(button[class*="btn-primary"])'
       );
 
       if (!selector) {
