@@ -34,7 +34,7 @@ You need a userscript manager extension installed in your browser:
 
 ### Install the Script
 
-1. **Direct Installation**: [Click here to install](https://github.com/olob0/wplace-refavorited-plus/raw/refs/heads/master/refavorited-plus.user.js)
+1. **Direct Installation**: [Click here to install](https://raw.githubusercontent.com/olob0/wplace-refavorited-plus/main/refavorited-plus.user.js)
 
 2. **Manual Installation**:
    - Copy the content of `refavorited-plus.user.js`
