@@ -18,7 +18,7 @@ The 🌟 emoji represents extra features of Refavorited+.
 - 📋 **Favorites List**: Manage all your favorites in a convenient table interface
 - 🎯 **Quick Navigation**: ~~Click markers or~~ use the favorites list to fly to locations
 - 💾 **Persistent Storage**: Your favorites are saved locally in your browser
-  ~~- ➕ **Zoom-Adaptive**: Markers adjust opacity based on zoom level for better visibility~~
+- ~~➕ **Zoom-Adaptive**: Markers adjust opacity based on zoom level for better visibility~~
 - 🗑️ **Easy Management**: Add, remove, and organize your favorites with simple controls
 - 🔍 **Dynamic Search**: Search across all your favorites for quick access (with fuzzy search) 🌟
 
