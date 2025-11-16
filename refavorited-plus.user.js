@@ -8,8 +8,8 @@
 // @match        *://wplace.live/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=wplace.live
 // @homepageURL  https://github.com/olob0/wplace-refavorited-plus
-// @updateURL    https://github.com/olob0/wplace-refavorited-plus/raw/refs/heads/master/refavorited-plus.user.js
-// @downloadURL  https://github.com/olob0/wplace-refavorited-plus/raw/refs/heads/master/refavorited-plus.user.js
+// @updateURL    https://raw.githubusercontent.com/olob0/wplace-refavorited-plus/main/refavorited-plus.user.js
+// @downloadURL  https://raw.githubusercontent.com/olob0/wplace-refavorited-plus/main/refavorited-plus.user.js
 // @require      https://cdn.jsdelivr.net/npm/fuzzysort@3.1.0/fuzzysort.min.js
 // @grant        unsafeWindow
 // @run-at       document-start
