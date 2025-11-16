@@ -18,7 +18,7 @@
 (function () {
   `use strict`;
 
-  const __VERSION = 0.1;
+  const __VERSION = 0.2;
   const __NAME = "Refavorited+";
 
   const pageWindow = unsafeWindow;
