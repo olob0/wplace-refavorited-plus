@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refavorited+
 // @namespace    lobo-refavorited-plus
-// @version      0.2
+// @version      0.3
 // @description  More favorite for wplace.live
 // @author       lobo (forked from allanf181)
 // @license      MIT
@@ -18,7 +18,7 @@
 (function () {
   `use strict`;
 
-  const __VERSION = 0.2;
+  const __VERSION = 0.3;
   const __NAME = "Refavorited+";
 
   const pageWindow = unsafeWindow;
@@ -461,15 +461,15 @@
       }
 
       if (!document.getElementById("favplusbutton")) {
-        selector.innerHTML += `<button id="favplusbutton" class="btn btn-primary btn-soft">${favPlusIcon}</button>`;
-        console.log("fav button injected");
+        const btn = document.createElement("button");
+        btn.id = "favplusbutton";
+        btn.className = "btn btn-primary btn-soft";
+        btn.innerHTML = favPlusIcon;
+        btn.onclick = onFavPlusButtonClick;
 
-        const favPlusButton = document.getElementById("favplusbutton");
+        selector.appendChild(btn);
 
-        if (favPlusButton) {
-          favPlusButton.onclick = onFavPlusButtonClick;
-          console.log("fav button event registered");
-        }
+        console.log("fav button injected and event registerd");
 
         updateFavPlusButtonState();
       }
