@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refavorited+
 // @namespace    lobo-refavorited-plus
-// @version      0.3
+// @version      0.4
 // @description  More favorite for wplace.live
 // @author       lobo (forked from allanf181)
 // @license      MIT
@@ -11,6 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/olob0/wplace-refavorited-plus/main/refavorited-plus.user.js
 // @downloadURL  https://raw.githubusercontent.com/olob0/wplace-refavorited-plus/main/refavorited-plus.user.js
 // @require      https://cdn.jsdelivr.net/npm/fuzzysort@3.1.0/fuzzysort.min.js
+// @require      https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4
 // @grant        unsafeWindow
 // @run-at       document-start
 // ==/UserScript==
@@ -18,7 +19,7 @@
 (function () {
   `use strict`;
 
-  const __VERSION = 0.3;
+  const __VERSION = 0.4;
   const __NAME = "Refavorited+";
 
   const pageWindow = unsafeWindow;
@@ -174,6 +175,16 @@
         <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"></path>
     </svg>Fav+`;
 
+  function createTd(...lines) {
+    const td = document.createElement("td");
+    td.className = "fav-td truncate";
+
+    const flat = lines.flat();
+    td.innerHTML = flat.join("<br/>");
+
+    return td;
+  }
+
   function renderFavoritesTable(favorites) {
     const tableBody = document.querySelector("#favorite-table-body");
 
@@ -181,27 +192,40 @@
 
     tableBody.innerHTML = "";
 
-    favorites.forEach((fav) => {
-      let row = document.createElement("tr");
-      let coords = fav.posObj.coords;
+    favorites.forEach((fav, index) => {
+      const row = document.createElement("tr");
+      row.classList.add(index % 2 === 0 ? "bg-base-100" : "bg-base-200");
 
-      row.innerHTML = `
-                <td>${fav.title}</td>
-                <td>Tile: (${fav.posObj.tile[0]}, ${
-        fav.posObj.tile[1]
-      })<br>Pixel: (${fav.posObj.pixel[0]}, ${fav.posObj.pixel[1]})</td>
-                <td>Coords: (${coords[0].toFixed(5)}, ${coords[1].toFixed(
-        5
-      )})</td>
-                <td>
-                    <button class="btn btn-sm btn-primary btn-soft" data-coords='${JSON.stringify(
-                      coords
-                    )}'>Fly</button>
-                    <button class="btn btn-sm btn-error btn-soft" data-posobj='${JSON.stringify(
-                      fav.posObj
-                    )}'>Delete</button>
-                </td>
-            `;
+      const coords = fav.posObj.coords;
+
+      const tilePixel = [
+        `(${fav.posObj.tile[0]}, ${fav.posObj.tile[1]})`,
+        `(${fav.posObj.pixel[0]}, ${fav.posObj.pixel[1]})`,
+      ];
+
+      const coordsParsed = [
+        `${coords[0].toFixed(5)}`,
+        `${coords[1].toFixed(5)}`,
+      ];
+
+      const tdTitle = createTd(fav.title);
+      const tdTilePixel = createTd(tilePixel);
+      const tdCoords = createTd(coordsParsed);
+
+      const tdButtons = createTd("");
+      tdButtons.innerHTML = `
+    <button class="btn btn-sm btn-primary btn-soft" data-coords='${JSON.stringify(
+      coords
+    )}'>Visit</button>
+    <button class="btn btn-sm btn-error btn-soft" data-posobj='${JSON.stringify(
+      fav.posObj
+    )}'>Delete</button>
+  `;
+
+      row.appendChild(tdTitle);
+      row.appendChild(tdTilePixel);
+      row.appendChild(tdCoords);
+      row.appendChild(tdButtons);
 
       tableBody.appendChild(row);
     });
@@ -371,52 +395,67 @@
     }
 
     const modalHTML = `
-    <div id="favorite-modal" class="modal">
-        <div class="modal-box max-w-4xl max-h-11/12">
-            <div>
-                <div class="flex items-center gap-1">
-                    <svg class="size-6" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                        <path d="m183-51 79-338L-1-617l346-29 135-319 135 319 346 29-263 228 79 338-297-180L183-51Z"></path>
-                        <path d="m293-203.08 49.62-212.54-164.93-142.84 217.23-18.85L480-777.69l85.08 200.38 217.23 18.85-164.93 142.84L667-203.08 480-315.92 293-203.08Z"></path>
-                    </svg>
-                    <h3 class="font-bold text-lg">${__NAME} <span class="text-sm">v${__VERSION}</span></h3>
-                </div>
-                <p class="text-sm">By Lobo - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus" target="_blank">GitHub</a></p>
-            </div>
-            <div class="modal-action absolute right-2 top-2">
-                <button type="button" id="import-favorites" class="btn btn-sm btn-secondary btn-outline">
-                    Import
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
-                    </svg>
-                </button>
-                <button type="button" id="export-favorites" class="btn btn-sm btn-secondary btn-outline">
-                    Export
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                    </svg>
-                </button>
-                <label for="favorite-modal" class="btn btn-sm btn-circle">✕</label>
-            </div>
-            <div class="my-4">
-                <input type="text" id="favorite-search" placeholder="Type to search..." class="input input-bordered w-full" />
-            </div>
-            <div class="overflow-x-auto">
-                <table class="table w-full">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Pos (Tile/Pixel)</th>
-                            <th>Pos (Coords)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="favorite-table-body">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>`;
+<div id="favorite-modal" class="modal">
+  <div class="modal-box max-w-4xl max-h-11/12 p-4">
+    <style>
+      .fav-table-header, .fav-table-body { width: 100%; table-layout: fixed; border-collapse: collapse; }
+      .fav-table-body-wrapper { max-height: 40vh; overflow-y: auto; }
+      .fav-th, .fav-td { padding: 0.5rem 0.75rem; text-align: left; vertical-align: middle; }
+      .fav-td.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .fav-table-body { border-top: 1px solid rgba(0,0,0,0.06); }
+    </style>
+
+    <div class="flex items-center gap-2 mb-2">
+      <svg class="size-6" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+        <path d="m183-51 79-338L-1-617l346-29 135-319 135 319 346 29-263 228 79 338-297-180L183-51Z"></path>
+        <path d="m293-203.08 49.62-212.54-164.93-142.84 217.23-18.85L480-777.69l85.08 200.38 217.23 18.85-164.93 142.84L667-203.08 480-315.92 293-203.08Z"></path>
+      </svg>
+      <h3 class="font-bold text-lg">${__NAME} <span class="text-sm">v${__VERSION}</span></h3>
+      <div class="ml-auto space-x-2">
+      <button type="button" id="import-favorites" class="btn btn-sm btn-primary btn-soft">Import</button>
+      <button type="button" id="export-favorites" class="btn btn-sm btn-primary btn-soft">Export</button>
+        <label for="favorite-modal" class="btn btn-sm btn-circle">✕</label>
+      </div>
+    </div>
+
+    <p class="text-sm mb-3">By Lobo - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus/issues/new/choose" target="_blank">report a bug</a> - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus" target="_blank">GitHub</a></p>
+
+    <div class="my-3">
+      <input type="text" id="favorite-search" placeholder="Type to search..." class="input input-bordered w-full outline-none" />
+    </div>
+
+    <table class="fav-table-header table-fixed w-full" aria-hidden="false">
+      <colgroup>
+        <col style="width:30%">
+        <col style="width:23.333%">
+        <col style="width:23.333%">
+        <col style="width:23.333%">
+      </colgroup>
+      <thead class="bg-base-300 font-bold">
+        <tr>
+          <th class="fav-th fav-th text-left">Title</th>
+          <th class="fav-th fav-th text-left">Tile/Pixel</th>
+          <th class="fav-th fav-th text-left">Coords</th>
+          <th class="fav-th fav-th text-left">Actions</th>
+        </tr>
+      </thead>
+    </table>
+
+    <div class="fav-table-body-wrapper mt-0">
+      <table id="favorite-table" class="fav-table-body table-fixed w-full" aria-hidden="false">
+        <colgroup>
+          <col style="width:30%">
+          <col style="width:23.333%">
+          <col style="width:23.333%">
+          <col style="width:23.333%">
+        </colgroup>
+        <tbody id="favorite-table-body">
+          <!-- linhas inseridas via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>`;
 
     const observerMainDiv = new MutationObserver(async () => {
       const selector = document.querySelector("div#favorite-modal");

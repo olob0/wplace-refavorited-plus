@@ -106,4 +106,4 @@ If you encounter any issues or have suggestions:
 1. Check the browser console for error messages
 2. Ensure your userscript manager is up to date
 3. Try disabling other userscripts that might conflict
-4. [Open an issue](https://github.com/olob0/wplace-refavorited-plus/issues) on GitHub describing the issue
+4. Open a [new issue](https://github.com/olob0/wplace-refavorited-plus/issues/new/choose) on GitHub with detailed information about the problem
