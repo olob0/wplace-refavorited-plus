@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refavorited+
 // @namespace    lobo-refavorited-plus
-// @version      0.4
+// @version      0.5
 // @description  More favorite for wplace.live
 // @author       lobo (forked from allanf181)
 // @license      MIT
@@ -19,8 +19,8 @@
 (function () {
   `use strict`;
 
-  const __VERSION = 0.4;
-  const __NAME = "Refavorited+";
+  const __VERSION = GM_info.script.version;
+  const __NAME = GM_info.script.name;
 
   const pageWindow = unsafeWindow;
   let lastClickedPixelInfo = null; // { tile: [Number, Number], pixel: [Number, Number] }
@@ -418,7 +418,7 @@
       </div>
     </div>
 
-    <p class="text-sm mb-3">By Lobo - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus/issues/new/choose" target="_blank">report a bug</a> - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus" target="_blank">GitHub</a></p>
+    <p class="text-sm mb-3">By ${GM_info.script.author} - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus/issues/new/choose" target="_blank">report a bug</a> - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus" target="_blank">GitHub</a></p>
 
     <div class="my-3">
       <input type="text" id="favorite-search" placeholder="Type to search..." class="input input-bordered w-full outline-none" />
@@ -488,7 +488,7 @@
 
     // fav button
 
-    const pixelMenuSelector = await waitForElement('div[class*="svelte-"]');
+    const pixelMenuSelector = await waitForElement('body div[class*="pinch"]');
 
     const observerPixelMenu = new MutationObserver(() => {
       const selector = pixelMenuSelector.querySelector(
@@ -531,14 +531,14 @@
       observerInjectFavListButtonExecuted = false;
 
       const rightButtonsContainer = await waitForElement(
-        'div[class*="svelte-"] > div[class*="top-"][class*="right-"]'
+        'div[class*="top-"][class*="right-"]'
       );
 
       const observerButtonsDiv = new MutationObserver(async () => {
         observerInjectFavListButtonExecuted = true;
 
         const selector = await waitForElement(
-          'div[class*="svelte-"] > div[class*="top-"][class*="right-"] div div:has(button[title])'
+          'div[class*="top-"][class*="right-"] div div:has(button[title])'
         );
 
         if (selector) {
