@@ -21,6 +21,7 @@ The 🌟 emoji represents extra features of Refavorited+.
 - ~~➕ **Zoom-Adaptive**: Markers adjust opacity based on zoom level for better visibility~~
 - 🗑️ **Easy Management**: Add, remove, and organize your favorites with simple controls
 - 🔍 **Dynamic Search**: Search across all your favorites for quick access (with fuzzy search) 🌟
+- 🗺 **Favorites Map Viewer**: To circumvent the limitations, Refavorited+ has a custom embedded map 🌟 (new in v0.6)
 
 ## 🚀 Installation
 
