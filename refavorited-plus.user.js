@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refavorited+
 // @namespace    lobo-refavorited-plus
-// @version      0.6
+// @version      0.7
 // @description  More favorite for wplace.live
 // @author       lobo (forked from allanf181)
 // @license      MIT
