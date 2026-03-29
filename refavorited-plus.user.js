@@ -39,19 +39,19 @@
     pageWindow.console.log(
       `%c[${__NAME}] INFO:`,
       "color: #d6d6d6; font-weight: bold;",
-      ...args
+      ...args,
     );
   console.error = (...args) =>
     pageWindow.console.log(
       `%c[${__NAME}] ERROR:`,
       "color: #ff3636; font-weight: bold;",
-      ...args
+      ...args,
     );
   console.warn = (...args) =>
     pageWindow.console.log(
       `%c[${__NAME}] WARN:`,
       "color: #fff236; font-weight: bold;",
-      ...args
+      ...args,
     );
 
   console.log("hooking fetch");
@@ -71,8 +71,8 @@
 
         console.log(
           `detected last clicked pixel at ${JSON.stringify(
-            lastClickedPixelInfo
-          )}`
+            lastClickedPixelInfo,
+          )}`,
         );
 
         window.requestAnimationFrame(updateFavPlusButtonState);
@@ -86,7 +86,7 @@
 
   async function getLatestTilesVersion() {
     const response = await fetch(
-      "https://api.github.com/repos/samuelscheit/wplace-archive/tags"
+      "https://api.github.com/repos/samuelscheit/wplace-archive/tags",
     );
     if (response.ok) {
       const data = await response.json();
@@ -116,19 +116,19 @@
   }
 
   function getLatLngFromPos(tile, pixel) {
-  const TILE_SIZE_PX = 1000.0;
-  const ZOOM_LEVEL = 11.0;
-  const n = Math.pow(2, ZOOM_LEVEL);
+    const TILE_SIZE_PX = 1000.0;
+    const ZOOM_LEVEL = 11.0;
+    const n = Math.pow(2, ZOOM_LEVEL);
 
-  const x = tile[0] + pixel[0] / TILE_SIZE_PX;
-  const y = tile[1] + pixel[1] / TILE_SIZE_PX;
+    const x = tile[0] + pixel[0] / TILE_SIZE_PX;
+    const y = tile[1] + pixel[1] / TILE_SIZE_PX;
 
-  const lon = (x / n) * 360.0 - 180.0;
-  const lat =
-    (Math.atan(Math.sinh(Math.PI * (1 - 2 * (y / n)))) * 180.0) / Math.PI;
+    const lon = (x / n) * 360.0 - 180.0;
+    const lat =
+      (Math.atan(Math.sinh(Math.PI * (1 - 2 * (y / n)))) * 180.0) / Math.PI;
 
-  return [lat, lon];
-}
+    return [lat, lon]; // ou { lat, lng } se preferir
+  }
 
   function pixelInfoToPos(tile, pixel) {
     return { coords: getLatLngFromPos(tile, pixel), pixel: pixel, tile: tile };
@@ -150,7 +150,7 @@
           fav.posObj.pixel[1] === posObj.pixel[1] &&
           fav.posObj.tile[0] === posObj.tile[0] &&
           fav.posObj.tile[1] === posObj.tile[1]
-        )
+        ),
     );
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }
@@ -161,7 +161,7 @@
         fav.posObj.pixel[0] === pixel[0] &&
         fav.posObj.pixel[1] === pixel[1] &&
         fav.posObj.tile[0] === tile[0] &&
-        fav.posObj.tile[1] === tile[1]
+        fav.posObj.tile[1] === tile[1],
     );
   }
 
@@ -318,11 +318,14 @@
       renderWorldCopies: false,
     });
 
-    map.touchZoomRotate.disableRotation(),
+    (map.touchZoomRotate.disableRotation(),
       map.on("load", () => {
         map.addSource("favorites", {
           type: "geojson",
           data: { type: "FeatureCollection", features: features },
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
         });
 
         favorites.forEach((fav) => {
@@ -375,14 +378,14 @@
         map.on(
           "mouseenter",
           "favorites-points",
-          () => (map.getCanvas().style.cursor = "pointer")
+          () => (map.getCanvas().style.cursor = "pointer"),
         );
         map.on(
           "mouseleave",
           "favorites-points",
-          () => (map.getCanvas().style.cursor = "")
+          () => (map.getCanvas().style.cursor = ""),
         );
-      });
+      }));
   }
 
   function createTd(...lines) {
@@ -415,10 +418,10 @@
       const tdButtons = createTd("");
       tdButtons.innerHTML = `
         <button class="btn btn-sm btn-primary btn-soft" data-coords='${JSON.stringify(
-          coords
+          coords,
         )}'>Visit</button>
         <button class="btn btn-sm btn-error btn-soft" data-posobj='${JSON.stringify(
-          fav.posObj
+          fav.posObj,
         )}'>Delete</button>`;
 
       row.append(tdTitle, tdTilePixel, tdCoords, tdButtons);
@@ -436,7 +439,7 @@
         if (!confirm("Are you sure you want to delete this favorite?")) return;
         removeFavorite(JSON.parse(this.getAttribute("data-posobj")));
         filterAndRenderFavorites(
-          document.querySelector("#favorite-search").value
+          document.querySelector("#favorite-search").value,
         );
       };
     });
@@ -453,7 +456,7 @@
     renderFavoritesTable(
       fuzzysort
         .go(searchTerm, allFavorites, { key: "title" })
-        .map((result) => result.obj)
+        .map((result) => result.obj),
     );
   }
 
@@ -496,20 +499,20 @@
 
     console.log("- event search input");
     (await waitForElement("#favorite-search")).addEventListener("input", (e) =>
-      filterAndRenderFavorites(e.target.value)
+      filterAndRenderFavorites(e.target.value),
     );
 
     console.log("- event close modal buton");
     (
       await waitForElement("#favorite-modal label[for='favorite-modal']")
     ).addEventListener("click", () =>
-      document.querySelector("#favorite-modal").removeAttribute("open")
+      document.querySelector("#favorite-modal").removeAttribute("open"),
     );
 
     console.log("- event open map button");
     (await waitForElement("#open-map-btn")).addEventListener(
       "click",
-      openMapLibreInstance
+      openMapLibreInstance,
     );
 
     console.log("- event import button");
@@ -552,7 +555,7 @@
             }
           }
           let confirmImport = confirm(
-            `This will overwrite your current favorites with ${favorites.length} favorites. Are you sure?`
+            `This will overwrite your current favorites with ${favorites.length} favorites. Are you sure?`,
           );
           if (!confirmImport) return;
           localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -561,7 +564,7 @@
         } catch (e) {
           alert("Failed to import favorites: " + e.message);
         }
-      }
+      },
     );
 
     console.log("- event export button");
@@ -571,9 +574,9 @@
         let base64 = btoa(localStorage.getItem("favorites") || "[]");
         navigator.clipboard.writeText(base64).then(
           () => alert("Favorites exported to clipboard."),
-          () => alert("Failed to copy to clipboard.")
+          () => alert("Failed to copy to clipboard."),
         );
-      }
+      },
     );
   }
 
@@ -610,7 +613,7 @@
     <div class="my-3">
         <input type="text" id="favorite-search" placeholder="Type to search..." class="input input-bordered w-full outline-none" />
     </div>
-    
+
     <table class="fav-table-header table-fixed w-full" aria-hidden="false">
       <colgroup>
         <col style="width:30%">
@@ -641,7 +644,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <p class="text-sm mt-3 text-center">By ${GM_info.script.author} - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus/issues/new/choose" target="_blank">report a bug</a> - <a class="text-primary underline" href="https://github.com/olob0/wplace-refavorited-plus" target="_blank">GitHub</a></p>
   </div>
 </div>`;
@@ -685,7 +688,7 @@
 
     const observerPixelMenu = new MutationObserver(() => {
       const selector = pixelMenuSelector.querySelector(
-        'div[class*="absolute"][class*="bottom-"] > div[class*="bg-base-"] div div[class*="hide-scrollbar"]:has(button[class*="btn-primary"])'
+        'div[class*="absolute"][class*="bottom-"][class*="z-30"] > div[class*="bg-base-"] div',
       );
 
       if (!selector) {
@@ -693,13 +696,18 @@
       }
 
       if (!document.getElementById("favplusbutton")) {
+        const btnContainer = document.createElement("div");
+        btnContainer.className =
+          "absolute top-[-40px] h-[67px] rounded-t-[16px] p-2 pb-0 bg-base-100 border-base-300 border-t";
+
         const btn = document.createElement("button");
         btn.id = "favplusbutton";
-        btn.className = "btn btn-primary btn-soft";
+        btn.className = "btn btn-sm btn-primary btn-soft";
         btn.innerHTML = favPlusIcon;
         btn.onclick = onFavPlusButtonClick;
 
-        selector.appendChild(btn);
+        btnContainer.appendChild(btn);
+        selector.appendChild(btnContainer);
 
         console.log("fav button injected and event registerd");
 
@@ -724,20 +732,20 @@
       observerInjectFavListButtonExecuted = false;
 
       const rightButtonsContainer = await waitForElement(
-        'div[class*="top-"][class*="right-"]'
+        'div[class*="top-"][class*="right-"]',
       );
 
       const observerButtonsDiv = new MutationObserver(async () => {
         observerInjectFavListButtonExecuted = true;
 
         const selector = await waitForElement(
-          'div[class*="top-"][class*="right-"] div div:has(button[title])'
+          'div[class*="top-"][class*="right-"] div div:has(button[title])',
         );
 
         if (selector) {
           if (selector.querySelectorAll("button[title]").length < 3) {
             console.log(
-              "< 3 buttons founded inside right buttons container. ignoring"
+              "< 3 buttons founded inside right buttons container. ignoring",
             );
             return;
           }
@@ -785,7 +793,7 @@
     setTimeout(() => {
       if (!observerInjectFavListButtonExecuted) {
         console.warn(
-          "injectFavListButtonCallback executed from timeout! Observer don't trigged"
+          "injectFavListButtonCallback executed from timeout! Observer don't trigged",
         );
         injectFavListButton();
       }
